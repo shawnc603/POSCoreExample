@@ -1,0 +1,9 @@
+C:\TFS.TestProjects\POSCoreExample\POSCoreAPI\POSCoreBAL\obj\Debug\POSCoreBAL.csproj.CoreCompileInputs.cache
+C:\TFS.TestProjects\POSCoreExample\POSCoreAPI\POSCoreBAL\bin\Debug\POSCoreBAL.dll
+C:\TFS.TestProjects\POSCoreExample\POSCoreAPI\POSCoreBAL\bin\Debug\POSCoreBAL.pdb
+C:\TFS.TestProjects\POSCoreExample\POSCoreAPI\POSCoreBAL\bin\Debug\Newtonsoft.Json.dll
+C:\TFS.TestProjects\POSCoreExample\POSCoreAPI\POSCoreBAL\bin\Debug\Newtonsoft.Json.xml
+C:\TFS.TestProjects\POSCoreExample\POSCoreAPI\POSCoreBAL\obj\Debug\POSCoreBAL.csproj.CopyComplete
+C:\TFS.TestProjects\POSCoreExample\POSCoreAPI\POSCoreBAL\obj\Debug\POSCoreBAL.dll
+C:\TFS.TestProjects\POSCoreExample\POSCoreAPI\POSCoreBAL\obj\Debug\POSCoreBAL.pdb
+C:\TFS.TestProjects\POSCoreExample\POSCoreAPI\POSCoreBAL\obj\Debug\POSCoreBAL.csprojResolveAssemblyReference.cache

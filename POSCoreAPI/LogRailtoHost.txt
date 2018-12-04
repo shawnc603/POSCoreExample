@@ -1,0 +1,34 @@
+Request TestLogin: {"ID":123,"Data":"5997","Method":0}
+ 
+Response TestLogin: {"requestId":"3ce11bf2-f409-4544-aad1-7a5dd5ef1c82","dateRequested":"2018-09-10T10:42:49.1646438-05:00","type":"response","result":{},"elapsedTimedMs":0.0,"status":200}
+ 
+Request TestLoginFetchTickets: {"ID":1,"PIN":"5997","Name":"test","Permissions":1}
+ 
+Response TestLoginFetchTickets: {"requestId":"ae535af5-b1d2-4df9-ae84-8e12b043551b","dateRequested":"2018-09-10T10:42:49.2571417-05:00","type":"response","result":{"data":[]},"elapsedTimedMs":0.0,"status":200}
+ 
+Request TestLoginFetchTicketsV2: {"ID":123,"Data":"5997","Method":0}
+ 
+Response TestLoginFetchTicketsV2: {"requestId":"433d8ca8-f32e-4697-b7a7-de5e188b20cf","dateRequested":"2018-09-10T10:42:49.3467284-05:00","type":"response","result":{"data":{"Account":null,"Tickets":[],"ProblemMinions":null},"error":{"code":400,"message":"System.NullReferenceException: Object reference not set to an instance of an object.\r\n   at TS.POS.Data.Transaction.TransactionManager.FindProblemMinions() in c:\\TestProjects\\dev\\TS.POS.Hosts\\TS.POS.Data\\Transaction\\TransactionManager.cs:line 178\r\n   at TS.POS.Data.API.RESTHost.LoginFetchTicketsV2(LoginData login) in c:\\TestProjects\\dev\\TS.POS.Hosts\\TS.POS.Data\\API\\RESTHost.cs:line 518"}},"elapsedTimedMs":70.0,"status":400}
+ 
+Request TestFetchTicketsByID: {"ID":1,"PIN":"5997","Name":"test","Permissions":0}
+ 
+Response TestFetchTicketsByID: {"requestId":"ac553d72-ca36-4240-887c-02117d93826f","dateRequested":"2018-09-10T10:42:49.3673498-05:00","type":"response","result":{"data":{"BillSummaryItems":[],"POSPayments":[],"Items":[],"ID":0,"Name":null,"Number":null,"TableID":0,"DepartmentID":0,"GuestCount":0,"Balance":0.0,"PaymentsTotal":0.0,"CreatedTime":"0001-01-01T00:00:00.0000000","Owner":null,"User":null,"Flags":0,"TicketAlerts":0}},"elapsedTimedMs":5.0,"status":200}
+ 
+Request TestFetchTicketsByName: {"ID":1,"PIN":"5997","Name":"test","Permissions":0}
+ 
+Response TestFetchTicketsByName: {"requestId":"43eb9194-ea7e-4ee0-91a2-003f2fdb0545","dateRequested":"2018-09-10T10:42:49.4002024-05:00","type":"response","result":{},"elapsedTimedMs":0.0,"status":200}
+ 
+Request TestFetchTicketsByNumber: {"ID":1,"PIN":"5997","Name":"test","Permissions":0}
+ 
+Response TestFetchTicketsByNumber: {"requestId":"34bf8bbd-bd88-4e81-8813-2a4b9a45443b","dateRequested":"2018-09-10T10:42:49.4410923-05:00","type":"response","result":{"error":{"code":400,"message":"System.NullReferenceException: Object reference not set to an instance of an object.\r\n   at TS.POS.Data.Objects.TicketCheck..ctor(TicketBill ticket) in c:\\TestProjects\\dev\\TS.POS.Hosts\\TS.POS.Data\\Objects\\TicketCheck.cs:line 19\r\n   at TS.POS.Data.API.RESTHost.FetchTicketsByNumber(UserAccount user, String number) in c:\\TestProjects\\dev\\TS.POS.Hosts\\TS.POS.Data\\API\\RESTHost.cs:line 175"}},"elapsedTimedMs":23.0,"status":400}
+ 
+Request TestApplyPayment Credit Card: {"CardData":{"PanHash":"8754","PANLast4":"9654","ExpYear":"1977","ExpMonth":"04"},"AuthCode":"1234","TDCPaymentID":1,"User":{"ID":1,"PIN":"5997","Name":"test","Permissions":0},"Ticket":{"ID":1234,"Name":"test","Number":"1234","TableID":1,"DepartmentID":897,"GuestCount":1,"Balance":1.0,"PaymentsTotal":100.0,"CreatedTime":"2018-09-10T10:42:49.4560563-05:00","Owner":{"ID":1,"PIN":"5997","Name":"test","Permissions":1},"User":{"ID":1,"PIN":"5997","Name":"test","Permissions":1},"Flags":4,"TicketAlerts":8},"POSTenderType":"CREDITCARD","Amount":1.0,"Tip":1.0,"TransactionCode":"wase123","PrintingInfo":{"Name":"","ID":"1234","SplitType":0,"IsFinal":true}}
+ 
+Response TestApplyPayment Credit Card {"requestId":"f4ff8d41-6282-4558-bcf0-b6dc64108530","dateRequested":"2018-09-10T10:42:49.4789948-05:00","type":"response","result":{"data":"Success"},"elapsedTimedMs":0.0,"status":200}
+ 
+Request TestPrintReceiptV3: {"PrinterID":1,"Header":"","Footer":"","Payment":{"Type":"","POSTenderType":"","CardholderName":"","PANLast4":"","EntryMethod":"","MerchantID":"","TerminalID":"","AID":"","TVR":"","IAD":"","TSI":"","AC":"","AuthCode":"","TransactionCode":""},"Bill":{"Subtotal":{"Name":"Beer","Value":1.0},"PaymentsTotal":{"Name":"Chicken","Value":1.0},"DiscountTotal":{"Name":"test1","Value":1.0},"ServiceChargeTotal":{"Name":"test1","Value":1.0},"SurchargeTotal":null,"GratuityTotal":{"Name":"test1","Value":1.0},"TipTotal":{"Name":"test1","Value":1.0},"TaxTotal":{"Name":"test1","Value":1.0},"Total":{"Name":"test1","Value":1.0}},"Order":{"Items":[{"ID":1,"Price":10.0,"Description":"","Discount":10.0,"ParentID":1,"UniqueID":1,"Ordinal":1,"Modifiers":[]}],"Tip":2.0},"Format":0,"Ticket":{"ID":1234,"Name":"test","Number":"1234","TableID":1,"DepartmentID":897,"GuestCount":1,"Balance":1.0,"PaymentsTotal":100.0,"CreatedTime":"2018-09-10T10:42:49.4899622-05:00","Owner":{"ID":1,"PIN":"5997","Name":"test","Permissions":0},"User":{"ID":1,"PIN":"5997","Name":"test","Permissions":0},"Flags":4,"TicketAlerts":8},"Options":0}
+ 
+Response TestPrintReceiptV3 {"requestId":"123a0be5-874f-4c3f-af57-08b1ab9c58dc","dateRequested":"2018-09-10T10:42:49.5139014-05:00","type":"response","result":{"data":"Success"},"elapsedTimedMs":0.0,"status":200}
+ 
+Response GetPOSStatus {"requestId":"8addd0fb-0f03-4612-a6e6-7c4aa578d1b1","dateRequested":"2018-09-10T10:42:49.5198829-05:00","type":"response","result":{"data":{"Status":null,"Kind":"Simphony","Version":null}},"elapsedTimedMs":0.0,"status":200}
+ 

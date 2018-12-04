@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{ED4813CC-B3EC-4239-84F3-9CD3BB55923F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>POSCoreBAL</RootNamespace>
+    <AssemblyName>POSCoreBAL</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\POSBusinessAccessLayer.cs" />
+    <Compile Include="Data\POSRepository.cs" />
+    <Compile Include="POSHostModels\NameValuePair.cs" />
+    <Compile Include="POSHostModels\ReceiptBill.cs" />
+    <Compile Include="POSModels\CreditCard.cs" />
+    <Compile Include="POSModels\ModelFetchTickets.cs" />
+    <Compile Include="POSModels\ModelLoginData.cs" />
+    <Compile Include="POSModels\ModelSettleTicket.cs" />
+    <Compile Include="POSModels\ModelUserAccount.cs" />
+    <Compile Include="POSModels\Orders.cs" />
+    <Compile Include="POSModels\Payments.cs" />
+    <Compile Include="POSModels\POSDetails.cs" />
+    <Compile Include="POSModels\ReceiptData.cs" />
+    <Compile Include="POSModels\Result.cs" />
+    <Compile Include="POSModels\Tickets.cs" />
+    <Compile Include="POSModels\Users.cs" />
+    <Compile Include="POSHostModels\Bill.cs" />
+    <Compile Include="POSHostModels\CardInfo.cs" />
+    <Compile Include="POSHostModels\FieldOptions.cs" />
+    <Compile Include="POSHostModels\LoginData.cs" />
+    <Compile Include="POSHostModels\LoginMethod.cs" />
+    <Compile Include="POSHostModels\ObjectFlags.cs" />
+    <Compile Include="POSHostModels\Order.cs" />
+    <Compile Include="POSHostModels\OrderItem.cs" />
+    <Compile Include="POSHostModels\PaymentInfo.cs" />
+    <Compile Include="POSHostModels\POSState.cs" />
+    <Compile Include="POSHostModels\POSStatus.cs" />
+    <Compile Include="POSHostModels\PrintedReceipt.cs" />
+    <Compile Include="POSHostModels\PrintingInfo.cs" />
+    <Compile Include="POSHostModels\QueuedCardPayment.cs" />
+    <Compile Include="POSHostModels\QueuedPaymentBase.cs" />
+    <Compile Include="POSHostModels\QueuedPaymentTicket.cs" />
+    <Compile Include="POSHostModels\QueuedPaypalPayment.cs" />
+    <Compile Include="POSHostModels\ReceiptFormats.cs" />
+    <Compile Include="POSHostModels\ReceiptPayment.cs" />
+    <Compile Include="POSHostModels\ResultCodes.cs" />
+    <Compile Include="POSHostModels\SettleTicketsModel.cs" />
+    <Compile Include="POSHostModels\SplitType.cs" />
+    <Compile Include="POSHostModels\Ticket.cs" />
+    <Compile Include="POSHostModels\TicketAlertDetails.cs" />
+    <Compile Include="POSHostModels\TicketBill.cs" />
+    <Compile Include="POSHostModels\TicketLookupFilters.cs" />
+    <Compile Include="POSHostModels\UserAccount.cs" />
+    <Compile Include="POSHostModels\UserPermissions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

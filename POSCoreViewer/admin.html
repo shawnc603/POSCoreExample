@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>POS ADMIN </title>
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/1.2.0/json2html.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.json2html/1.2.0/jquery.json2html.min.js"></script>
+    <style src="css/style.css"></style>
+    <script>
+        $(document).ready(function() {
+            HideAllSections();            
+        });
+
+        function getPOSData(){ 
+              $.get("http://localhost:8422/api/POS/GetData/type=" + $('#InputType').val(), function(data, status){                
+                    var obj = JSON.parse(data);
+                    var pretty = JSON.stringify(obj, undefined, 4);
+                    $('#RespUserData').val(pretty);
+                    //alert("Data: " + data + "\nStatus: " + status);
+                    //console.log(JSON.stringify(data));
+                    //console.log(JSON.parse(data));
+                    
+                    /*$('#UserList_table').empty()                  
+                    let jsonObjArray = JSON.parse(data)
+                    let user_data='<tr align="left"><td><th>UserId</th></td><td><th>PIN</th></td><td><th>Name</th></td></tr>';
+                    for (var i=0; i<jsonObjArray.length; i++) {
+                        var  jsonItemArray = jsonObjArray[i];                                                      
+                            user_data +='<tr align="left">'
+                            user_data +='<td>'+ jsonItemArray.UserId + '<td>';
+                            user_data +='<td>'+ jsonItemArray.PIN + '<td>';
+                            user_data +='<td>'+ jsonItemArray.Name + '<td>';
+                            user_data +='<tr>';                      
+                    }
+                    $('#UserList_table').append(user_data);*/
+                });
+        }
+
+        function getLoginData(LoginData){ 
+            var userdata = $('#GetLoginData').val();
+            console.log(userdata);
+
+            $.ajax({
+                url: 'http://localhost:8422/api/POS/GetLoginData/',
+                type: 'POST',
+                data:userdata,            
+                contentType: "application/json;charset=utf-8",
+                headers:{
+                    'Access-Control-Allow-Origin':'*'
+                },       		
+                success: function( data, textStatus, jQxhr ){
+                    $('#RespLoginData').val(JSON.stringify(data, undefined, 4));
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log("error:"+ errorThrown );
+                }
+            });                  
+        }
+
+        function getServerTickets(){ 
+            var userdata = $('#GetServerTicketsData').val();
+            console.log(userdata);
+
+            $.ajax({
+                url: 'http://localhost:8422/api/POS/GetTickets',
+                type: 'POST',
+                data:userdata,            
+                contentType: "application/json;charset=utf-8",
+                headers:{
+                    'Access-Control-Allow-Origin':'*'
+                },       		
+                success: function( data, textStatus, jQxhr ){
+                    $('#RespServerTicketsData').val(JSON.stringify(data, undefined, 4));
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log("error:"+ errorThrown );
+                }
+            });                  
+        }
+
+
+        function getTicketbyTableName(Name){ 
+            var userdata = $('#GetServerTicketsByTableNameData').val();
+            console.log(userdata);
+
+            $.ajax({
+                url: 'http://localhost:8422/api/POS/GetTicketByName/name=' + $('#TableName').val(),
+                type: 'POST',
+                data:userdata,            
+                contentType: "application/json;charset=utf-8",
+                headers:{
+                    'Access-Control-Allow-Origin':'*'
+                },       		
+                success: function( data, textStatus, jQxhr ){
+                    $('#RespServerTicketsByTableNameData').val(JSON.stringify(data, undefined, 4));
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log("error:"+ errorThrown );
+                }
+            });  
+
+        }
+
+        function getTicketbyTicketID(){ 
+            var userdata = $('#GetServerTicketsByTicketIdData').val();
+            console.log(userdata);
+
+            $.ajax({
+                url: 'http://localhost:8422/api/POS/GetTicketById',
+                type: 'POST',
+                data:userdata,            
+                contentType: "application/json;charset=utf-8",
+                headers:{
+                    'Access-Control-Allow-Origin':'*'
+                },       		
+                success: function( data, textStatus, jQxhr ){
+                    $('#RespServerTicketsByTicketIdData').val(JSON.stringify(data, undefined, 4));
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log("error:"+ errorThrown );
+                }
+            });  
+        }
+
+        function ApplyPayment(){ 
+            var userdata = $('#InputApplyPaymentData').val();
+            console.log(userdata);
+
+            $.ajax({
+                url: 'http://localhost:8422/api/pos/PostApplyPayment',
+                type: 'POST',
+                data:userdata,            
+                contentType: "application/json;charset=utf-8",
+                headers:{
+                    'Access-Control-Allow-Origin':'*'
+                },       		
+                success: function( data, textStatus, jQxhr ){
+                    $('#RespApplyPaymentData').val(JSON.stringify(data, undefined, 4));
+                    alert('Payment successfully Submitted! ');
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log("error:"+ errorThrown );
+                }
+            }); 
+
+        }
+
+        function SettleTicket(){ 
+            var userdata = $('#InputSettleTicketData').val();
+            console.log(userdata);
+
+            $.ajax({
+                url: 'http://localhost:8422/api/pos/PostSettleTicket',
+                type: 'POST',
+                data:userdata,            
+                contentType: "application/json;charset=utf-8",
+                headers:{
+                    'Access-Control-Allow-Origin':'*'
+                },       		
+                success: function( data, textStatus, jQxhr ){
+                    $('#RespSettleTicketData').val(JSON.stringify(data, undefined, 4));
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log("error:"+ errorThrown );
+                }
+            }); 
+
+        }
+
+        function GetPrinters(){ 
+
+            $.get("http://localhost:8422/api/POS/GetPrinters", function(data, status){
+                    $('#RespGetPrintersData').val(JSON.stringify(data, undefined, 4));
+            });
+        }
+
+        function PrintReceipt(){ 
+            var userdata = $('#InputPrintReceiptData').val();
+            console.log(userdata);
+
+            $.ajax({
+                url: 'http://localhost:8422/api/pos/PostPrintReceipt ',
+                type: 'POST',
+                data:userdata,            
+                contentType: "application/json;charset=utf-8",
+                headers:{
+                    'Access-Control-Allow-Origin':'*'
+                },       		
+                success: function( data, textStatus, jQxhr ){
+                    $('#RespPrintReceiptData').val(JSON.stringify(data, undefined, 4));
+                    alert('Data Payload Sent to Print Queue: '+ JSON.stringify(data));
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log("error:"+ errorThrown );
+                }
+            }); 
+        }
+
+        function TransformtToHtml(){              
+           // $('#receiptout').json2html( data,transform );             
+        }
+
+        function SubmitPOSUser(){ 
+            var userdata = $('#InputPOSUserData').val();
+            console.log(userdata);
+
+            $.ajax({
+                url: 'http://localhost:8422/api/POS/CreatePOSUsers',
+                type: 'POST',
+                data:userdata,            
+                contentType: "application/json;charset=utf-8",
+                headers:{
+                    'Access-Control-Allow-Origin':'*'
+                },       		
+                success: function( data, textStatus, jQxhr ){
+                    $('#RespPOSUserData').val(JSON.stringify(data, undefined, 4));
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log("error:"+ errorThrown );
+                }
+            }); 
+        }
+
+        function SubmitPOSTicket(){ 
+            var userdata = $('#InputPOSTicketData').val();
+            console.log(userdata);
+
+            $.ajax({
+                url: 'http://localhost:8422/api/POS/CreatePOSTickets/userid=' + $('#InputUserID').val(),
+                type: 'POST',
+                data:userdata,            
+                contentType: "application/json;charset=utf-8",
+                headers:{
+                    'Access-Control-Allow-Origin':'*'
+                },       		
+                success: function( data, textStatus, jQxhr ){
+                    $('#RespPOSTicketData').val(JSON.stringify(data, undefined, 4));
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log("error:"+ errorThrown );
+                }
+            }); 
+        }
+
+        function SubmitPOSOrders(){ 
+            var userdata = $('#InputPOSOrdersData').val();
+            console.log(userdata);
+
+            $.ajax({
+                url: 'http://localhost:8422/api/POS/CreatePOSOrders/ticketId='+$('#InputTicketID').val()+'&orderId='+ $('#InputOrderID').val(),
+                type: 'POST',
+                data:userdata,            
+                contentType: "application/json;charset=utf-8",
+                headers:{
+                    'Access-Control-Allow-Origin':'*'
+                },       		
+                success: function( data, textStatus, jQxhr ){
+                    $('#RespPOSOrderData').val(JSON.stringify(data, undefined, 4));
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log("error:"+ errorThrown );
+                }
+            }); 
+        }
+
+        function SubmitPOSPayment(){ 
+            var userdata = $('#InputPOSPaymentData').val();
+            console.log(userdata);
+
+            $.ajax({
+                url: 'http://localhost:8422/api/POS/CreatePOSPayments/ticketId='+$('#InputPaymTicketID').val(),
+                type: 'POST',
+                data:userdata,            
+                contentType: "application/json;charset=utf-8",
+                headers:{
+                    'Access-Control-Allow-Origin':'*'
+                },       		
+                success: function( data, textStatus, jQxhr ){
+                    $('#RespPOSPaymentsData').val(JSON.stringify(data, undefined, 4));
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log("error:"+ errorThrown );
+                }
+            }); 
+        }
+
+        function SubmitPOSCreditCard(){ 
+            var userdata = $('#InputPOSCreditCardData').val();
+            console.log(userdata);
+
+            $.ajax({
+                url: 'http://localhost:8422/api/POS/CreatePOSCreditCards/paymentId='+$('#InputPaymentID').val(),
+                type: 'POST',
+                data:userdata,            
+                contentType: "application/json;charset=utf-8",
+                headers:{
+                    'Access-Control-Allow-Origin':'*'
+                },       		
+                success: function( data, textStatus, jQxhr ){
+                    $('#RespPOSCreditCardData').val(JSON.stringify(data, undefined, 4));
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log("error:"+ errorThrown );
+                }
+            }); 
+        }
+
+        function getPOSInfo(){ 
+            $.get("http://localhost:8422/api/POS/GetPOSStatus", function(data, status){
+                $("#Kind").val(data.kind);
+                $("#Status").val(data.status);
+                $("#Version").val(data.version);
+            });
+        }
+
+        function HideFunction(nameofsection) {
+            HideSectionItems();
+            document.getElementById(nameofsection);
+            var x = document.getElementById(nameofsection);
+            if (x.style.display === "none") 
+            {
+               //$('#'+ nameofsection).addClass('active');
+                x.style.display = "block";
+            } 
+        }
+        
+        function HidePanelSection(nameofsection)
+        {   
+            if(nameofsection == 'sectionA')
+            {
+                var x = document.getElementById(nameofsection);
+                var y = document.getElementById('sectionB')
+            }
+            else
+            {
+                var x = document.getElementById(nameofsection);
+                var y = document.getElementById('sectionA');
+            }
+            if (x.style.display === "none") 
+            {
+                x.style.display = "block";
+                y.style.display = "none";
+                HideSectionItems('B');
+            } 
+            if (y.style.display === "none") 
+            {
+                y.style.display = "block";
+                x.style.display = "none";
+                HideSectionItems('A');              
+            }
+        }
+
+        function HideSectionItems(type)
+        {
+            for(i=1;i<16;i++)
+            {
+                document.getElementById('section'+i).style.display = "none";
+            }
+        }
+
+        function HideAllSections()
+        {
+            document.getElementById('sectionA').style.display = "none";
+            document.getElementById('sectionB').style.display = "none";
+            HideSectionItems('A');
+            HideSectionItems('B');
+        }  
+    </script>
+</head>
+<body>
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-3 sidenav">
+        <div>
+            <a class="navbar-brand js-scroll-trigger" href="http://127.0.0.1:5500/index.html"><h3>ADMIN</h3></a>
+            <br><br><br><br>
+        </div>
+        <ul class="nav nav-pills nav-stacked ">
+            <li class="page-link" ><a onclick="HidePanelSection('sectionB')">Integration Functions</a></li>
+            <li class="page-link" ><a onclick="HidePanelSection('sectionA')">Admin Functions</a></li>
+        </ul><br><br><br>
+        <div id="sectionA" >
+            <ul class="nav nav-pills nav-stacked">
+                <li class="page-link" data-page="GetLoginData"><a onclick="HideFunction('section2')">Get User Login Information</a></li>
+                <li class="page-link" data-page="GetAllTicketsByServer"><a onclick="HideFunction('section3')">Get All Tickets By Server</a></li>
+                <li class="page-link" data-page="GetTicketbyTicketID"><a onclick="HideFunction('section5')">Get Ticket by Ticket ID</a></li>
+                <li class="page-link" data-page="ApplyPayment"><a onclick="HideFunction('section6')">Apply Payment</a></li>
+                <li class="page-link" data-page="SettleTicket"><a onclick="HideFunction('section7')">Settle Ticket</a></li>
+                <li class="page-link" data-page="PrintReceipt"><a onclick="HideFunction('section8')">Print Receipt</a></li>
+                <li class="page-link" data-page="GetPOSSystemVersion"><a onclick="HideFunction('section9')">Get POS System Version </a></li>
+                <li class="page-link" data-page="GetPrinters"><a onclick="HideFunction('section15')">Get Printers </a></li>
+            </ul><br><br>
+        </div>
+        <div id="sectionB" >
+            <ul class="nav nav-pills nav-stacked">
+            <li class="page-link" data-page="CreatePOSUsers"><a onclick="HideFunction('section10')">Create POS Users</a></li>
+            <li class="page-link" data-page="CreatePOSTickets"><a onclick="HideFunction('section11')">Create POS Tickets</a></li>
+            <li class="page-link" data-page="CreatePOSOrders"><a onclick="HideFunction('section12')">Create POS Orders</a></li>
+            <li class="page-link" data-page="CreatePOSPayments"><a onclick="HideFunction('section13')">Create POS Payments</a></li>
+            <li class="page-link" data-page="CretaePOSCreditCards"><a onclick="HideFunction('section14')">CreatePOS Credit Cards</a></li>
+            </ul><br><br>
+        </div>
+    </div>
+
+    <div class="align-self-center  col-sm-9">
+      <div class="align-middle" id="section1">
+        <div class="form-group">
+            <label for="InputType">Enter QueryType:</label>
+            <input type="text" class="form-control" id="InputType" style="color: blue; background-color: lightyellow">
+        </div>
+        <div class="form-group">
+            <label for="RespUserData">Response User Data JSON:</label>
+             <textarea class="form-control" cols="50" rows="25" id="RespUserData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <button id="btnUserData" type="button" class="btn btn-primary" onclick="getPOSData()">Get User Data</button>
+      </div>
+
+      <div class="align-middle" id="section2" >
+        <div class="form-group">
+            <label for="GetLoginData">Input Login Data JSON:</label>
+            <textarea class="form-control" rows="5" id="GetLoginData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="RespLoginData">Response Login Data JSON:</label>
+            <textarea class="form-control" cols="50" rows="15" id="RespLoginData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <button id="btnGetLoginData" type="button" class="btn btn-primary" onclick="getLoginData()">Get User Login Information</button>
+      </div>
+
+      <div class="align-middle" id="section3" >
+        <div class="form-group">
+            <label for="GetServerTicketsData">Input Server Tickets JSON:</label>
+            <textarea class="form-control" rows="5" id="GetServerTicketsData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="RespServerTicketsData">Response Tickets By Server JSON:</label>
+            <textarea class="form-control" cols="50" rows="15"  id="RespServerTicketsData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <button id="btnGetAllTicketsByServer" type="button" class="btn btn-primary" onclick="getServerTickets()">Get All Tickets By Server ID</button>
+      </div>
+
+      <div class="align-middle" id="section4" >
+        <div class="form-group">
+            <label for="TableName">Enter Table Name:</label>
+            <input type="text" class="form-control" id="TableName" style="color: blue; background-color: lightyellow">
+        </div>
+        <div class="form-group">
+            <label for="GetServerTicketsByTableNameData">Input Server Tickets By Name JSON:</label>
+            <textarea class="form-control" rows="5" id="GetServerTicketsByTableNameData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="RespServerTicketsByTableNameData">Response Tickets By Server By Name JSON:</label>
+            <textarea class="form-control" cols="50" rows="15"  id="RespServerTicketsByTableNameData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <button id="btnGetTicketbyTableName" type="button" class="btn btn-primary" onclick="getTicketbyTableName()">Get Ticket by Table Name</button>
+      </div>
+
+      <div class="align-middle" id="section5" >
+        <div class="form-group">
+            <label for="GetServerTicketsByTicketIdData">Input Ticket By TicketID  JSON:</label>
+            <textarea class="form-control" rows="5" id="GetServerTicketsByTicketIdData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="RespServerTicketsByTicketIdData">Response Ticket By TicketID JSON:</label>
+            <textarea class="form-control" cols="50" rows="15"  id="RespServerTicketsByTicketIdData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <button id="btnGetTicketbyTicketID" type="button" class="btn btn-primary" onclick="getTicketbyTicketID()">Get Ticket by Ticket ID</button>
+      </div>
+
+      <div class="align-middle" id="section6" >
+        <div class="form-group">
+            <label for="InputApplyPaymentData">Input Apply Payment JSON:</label>
+            <textarea class="form-control" rows="25" id="InputApplyPaymentData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="RespApplyPaymentData">Response Apply Payment JSON:</label>
+            <textarea class="form-control" cols="50" rows="5" id="RespApplyPaymentData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <button id="btnApplyPayment" type="button" class="btn btn-primary" onclick="ApplyPayment()">Apply Payment</button>
+      </div>
+
+      <div class="align-middle" id="section7" >
+        <div class="form-group">
+            <label for="InputSettleTicketData">Input Settle Ticket JSON:</label>
+            <textarea class="form-control" rows="15" id="InputSettleTicketData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="RespSettleTicketData">Response Settle Ticket JSON:</label>
+            <textarea class="form-control" cols="50" rows="5" id="RespSettleTicketData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <button id="btnSettleTicket" type="button" class="btn btn-primary" onclick="SettleTicket()">Settle Ticket</button>
+      </div>
+
+      <div class="align-middle" id="section8">
+        <div class="form-group">
+            <label for="InputPrintReceiptData">Input PrintReceipt JSON:</label>
+            <textarea class="form-control" rows="25" id="InputPrintReceiptData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="RespPrintReceiptData">Response Settle Ticket JSON:</label>
+            <textarea class="form-control" cols="50" rows="5" id="RespPrintReceiptData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <div id="receiptout"></div>
+        <button id="btnPrintReceipt" type="button" class="btn btn-primary" onclick="PrintReceipt()">Print Receipt</button>
+      </div>
+
+      <div class="align-middle" id="section9">
+        <br>
+        <div class="form-group">
+            <label for="Kind">Kind</label>
+            <input type="text" class="form-control" id="Kind" style="color: blue; background-color: lightyellow">
+        </div>
+        <div class="form-group">
+            <label for="Status">Status</label>
+            <input type="text" class="form-control" id="Status" style="color: blue; background-color: lightyellow">
+        </div>
+        <div class="form-group">
+            <label for="Version">Version</label>
+            <input type="text" class="form-control" id="Version" style="color: blue; background-color: lightyellow">
+        </div>
+        <button id="btnGetPOSSystemVersiontype" button" class="btn btn-primary" onclick="getPOSInfo()">Get POS Information</button>
+      </div> 
+
+      <div class="align-middle" id="section10">
+        <div class="form-group">
+            <label for="InputPOSUserData">Input POS User JSON:</label>
+            <textarea class="form-control" rows="15" id="InputPOSUserData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="RespPOSUserData">Response POS User JSON:</label>
+            <textarea class="form-control" cols="50" rows="5" id="RespPOSUserData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <button id="btnSubmitPOSUser" type="button" class="btn btn-primary" onclick="SubmitPOSUser()">Submit POS Users</button>
+      </div> 
+
+      <div class="align-middle" id="section11">
+        <div class="form-group">
+            <label for="InputUserID">Enter UserID:</label>
+            <input type="text" class="form-control" id="InputUserID" style="color: blue; background-color: lightyellow">
+        </div>
+        <div class="form-group">
+            <label for="InputPOSTicketData">Input POS Ticket JSON:</label>
+            <textarea class="form-control" rows="15"" id="InputPOSTicketData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="RespPOSTicketData">Response POS Ticket JSON:</label>
+            <textarea class="form-control" cols="50" rows="5" id="RespPOSTicketData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <button id="btnSubmitPOSTicket" type="button" class="btn btn-primary" onclick="SubmitPOSTicket()">Submit POS Ticket</button>
+      </div> 
+
+      <div class="align-middle" id="section12">
+        <div class="form-group">
+            <label for="InputTicketID">Enter TicketID:</label>
+            <input type="text" class="form-control" id="InputTicketID" style="color: blue; background-color: lightyellow">
+        </div>
+        <div class="form-group">
+            <label for="InputOrderID">Enter OrderID:</label>
+            <input type="text" class="form-control" id="InputOrderID" style="color: blue; background-color: lightyellow">
+        </div>
+        <div class="form-group">
+            <label for="InputPOSOrdersData">Input POS Order JSON:</label>
+            <textarea class="form-control" rows="15" id="InputPOSOrdersData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="RespPOSOrderData">Response POS Order JSON:</label>
+            <textarea class="form-control" cols="50" rows="5" id="RespPOSOrderData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <button id="btnSubmitPOSOrders" type="button" class="btn btn-primary" onclick="SubmitPOSOrders()">Submit POS Orders</button>
+      </div> 
+
+      <div class="align-middle" id="section13">
+        <div class="form-group">
+            <label for="InputPaymTicketID">Enter TicketID:</label>
+            <input type="text" class="form-control" id="InputPaymTicketID" style="color: blue; background-color: lightyellow">
+        </div>
+        <div class="form-group">
+            <label for="InputPOSPaymentData">Input POS Payments JSON:</label>
+            <textarea class="form-control" rows="15" id="InputPOSPaymentData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="RespPOSPaymentsData">Response POS Payments JSON:</label>
+            <textarea class="form-control" cols="50" rows="5" id="RespPOSPaymentsData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <button id="btnSubmitPOSPayment" type="button" class="btn btn-primary" onclick="SubmitPOSPayment()">Submit POS Payment</button>
+      </div> 
+
+      <div class="align-middle" id="section14">
+        <div class="form-group">
+            <label for="InputPaymentID">Enter PaymentID:</label>
+            <input type="text" class="form-control" id="InputPaymentID" style="color: blue; background-color: lightyellow">
+        </div>
+        <div class="form-group">
+            <label for="InputPOSCreditCardData">Input POS Credit Card JSON:</label>
+            <textarea class="form-control" rows="15" id="InputPOSCreditCardData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="RespPOSCreditCardData">Response POS Credit Card JSON:</label>
+            <textarea class="form-control" cols="50" rows="5" id="RespPOSCreditCardData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <button id="btnSubmitPOSCreditCard" type="button" class="btn btn-primary" onclick="SubmitPOSCreditCard()">Submit POS Credit Card Info</button>
+      </div>
+       <div class="align-middle" id="section15">
+        <div class="form-group">
+            <label for="RespGetPrintersData">GET PRINTERS JSON:</label>
+            <textarea class="form-control" cols="30" rows="20" id="RespGetPrintersData" style="color: blue; background-color: lightyellow"></textarea>
+        </div>
+        <button id="btnGetPrintersData" type="button" class="btn btn-primary" onclick="GetPrinters()">Get Printers</button>
+      </div>
+
+  </div>
+</div>
+
+<footer class="container-fluid">
+
+</footer>
+
+
+
+</body>
+</html>

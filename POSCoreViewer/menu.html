@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>POS RESTAURANT SYSTEM</title>
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.3.1017/styles/kendo.common.min.css" />
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.3.1017/styles/kendo.blueopal.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/1.2.0/json2html.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.json2html/1.2.0/jquery.json2html.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://kendo.cdn.telerik.com/2018.3.1017/js/kendo.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js" 
+                 integrity="sha256-vIL0pZJsOKSz76KKVCyLxzkOT00vXs+Qz4fYRVMoDhw="crossorigin="anonymous">
+	</script>
+    <style src="css/style.css"></style>
+    <script>
+        $(document).ready(function() {
+
+ 
+        });
+
+        function printReceipt()
+        {
+            var text ='<div id=\"invoice-POS\"> \
+                        <center id=\"top\">\
+                        <div class=\"logo\"></div>\
+                        <div class=\"info\"> \
+                        </div>\
+                        </center><div id=\"mid\">\
+                            <div class=\"info\">\
+                                <h2>Contact Info</h2>\
+                                <p> \
+                                    Address : street city, state 0000</br>\
+                                    Email   : JohnDoe@gmail.com</br>\
+                                    Phone   : 555-555-5555</br>\
+                                </p>\
+                            </div>\
+                        </div>\
+                    </div>';
+
+            //const pdf = new jsPDF();
+            //pdf.text(10, 10, text);
+            var base64Img = null;
+            margins = {
+            top: 70,
+            bottom: 40,
+            left: 30,
+            width: 550
+            };
+            var pdf = new jsPDF('p', 'pt', 'a4');
+            pdf.setFontSize(18);
+            pdf.fromHTML(text, 
+                margins.left, // x coord
+                margins.top,
+                {
+                    // y coord
+                     width: margins.width// max width of content on PDF
+                },function(dispose) {
+                      headerFooterFormatting(pdf)
+                }, 
+                margins);
+            pdf.save();
+        }
+        function headerFooterFormatting(doc)
+        {
+            var totalPages  = doc.internal.getNumberOfPages();
+            for(var i = totalPages; i >= 1; i--)
+            { //make this page, the current page we are currently working on.
+                doc.setPage(i);                          
+                header(doc);            
+                //footer(doc, i, totalPages);          
+            }
+        };
+        function header(doc)
+        {
+            doc.setFontSize(30);
+            doc.setTextColor(40);
+            doc.setFontStyle('normal');    
+            doc.text("POS RESTAURANT INVOICE", margins.left + 50, 40 );
+            doc.line(3, 70, margins.width + 43,70); // horizontal line
+        };
+        function displayItem(item, description, price, itemQty){              
+            var listitem  = $(item).text();
+            var Qty  = $(itemQty).val();
+            $(itemQty).val('');
+            if(Qty == '')
+            {
+                alert("Please enter a Quantity");
+                return;
+            }
+              
+            alert(listitem);
+
+            var sumVar;
+            if(listitem.length > 0)
+            {                   
+                $("#todolist").append("<li class=\"list-group-item active\" >" + listitem + " x " + Qty + "</li>"); 
+                
+               
+                if(sessionStorage.length > 0)
+                { 
+                    buildOrderItemsJSON(description, price, Qty);
+
+                    var sumVar =0;
+                    var orderitems = JSON.parse(sessionStorage.getItem("orderitems"))
+                    console.log(orderitems);
+                    for (var i = 0; i < orderitems.length; i++) {
+                
+                            var qty = orderitems[i].ItemQty;
+                            var price =  orderitems[i].ItemPrice;
+                            var sumVar = parseFloat(sumVar) + (parseInt(qty) * parseFloat(price));  
+                            sumVar = sumVar.toFixed(2);                                                                 
+                    }
+
+                    sessionStorage.setItem("Total", sumVar); 
+                    $("#totalslist").text("Total: $" + sumVar);
+                    
+                }
+                else
+                {
+                    buildOrderItemsJSON(description, price, Qty)
+
+                    var sumVar = parseFloat(Qty) * parseFloat(price);
+                    sessionStorage.setItem("Total", sumVar); 
+                    $("#totalslist").text("Total: $" + sumVar);
+                                     
+                }                               
+            }
+
+        }
+        function sendJSONLogin()
+        {
+
+            var user = {
+                ID: $('#PIN').val(),
+                Name: 'POS USER',
+                PIN: $('#PIN').val(),
+            };
+
+            var jsonStrUser = JSON.stringify(user);
+            sessionStorage.setItem("user", jsonStrUser);
+
+
+            $.ajax({
+                url: 'http://localhost:8422/api/POS/CreatePOSUsers',
+                type: 'POST',
+                data:jsonStrUser,            
+                contentType: "application/json;charset=utf-8",
+                headers:{
+                    'Access-Control-Allow-Origin':'*'
+                },       		
+                success: function( data, textStatus, jQxhr ){                        
+                        var partsArray =  data["resultMessage"]
+                        partsArray = partsArray.split(':')
+                        alert("success1: " + partsArray[0] + " userId: " + partsArray[1]);
+                        sendJSONTicket(partsArray[1])
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log("error:"+ errorThrown );
+                }
+            }); 
+        }
+        function sendJSONTicket(userId)
+        {
+            var balance;
+            var ticketId;
+            var val = $('#totalslist').text();
+            alert('totalslist: ' + val);
+            alert('userid: ' + userId);
+            if(val=='')
+            {
+                alert('Empty Balance! ');
+                return;
+            }
+            else
+            {
+                var n = val .lastIndexOf('$');
+                var balance = val.substring(n + 1);
+                alert('balance: ' + val);
+            }
+            var ticketarray = [];
+            var ticket = {
+                TableName: $('#tablename').val(),
+                TableNumber: $('#tablenumber').val(),
+                DepartmentId: 1,
+                GuestCount: $('#guestcount').val(),
+                Balance: balance,
+                TicketAlerts: 'none',
+                Flags: 'none',
+                Options: 'none',
+                CreatedTime: '',
+            };
+            ticketarray.push(ticket);
+            var jsonStrTicket = JSON.stringify(ticketarray);
+            sessionStorage.setItem("ticket", jsonStrTicket);
+            var Ticket_URL  = 'http://localhost:8422//api/POS/CreatePOSTickets/userid='+ userId;
+
+            $.ajax({
+                url: Ticket_URL,
+                type: 'POST',
+                data:jsonStrTicket,            
+                contentType: "application/json;charset=utf-8",
+                headers:{
+                    'Access-Control-Allow-Origin':'*'
+                },       		
+                success: function( data, textStatus, jQxhr ){
+                        var partsArray =  data["resultMessage"]
+                        partsArray = partsArray.split(':')
+                        alert("success1: " + partsArray[0] + " ticketId: " + partsArray[1]);
+                        sendOrderItems(partsArray[1]);
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log("error:"+ errorThrown );
+                }
+            }); 
+        }
+        function sendOrderItems(ticketId)
+        {
+            var jsonStr = sessionStorage.getItem("orderitems");
+            alert('sendOrderItems: ' + jsonStr);
+            var OrderItems_URL  = 'http://localhost:8422/api/POS/CreatePOSOrders/ticketId='+ticketId+'&orderId=0'
+            $.ajax({
+                url: OrderItems_URL,
+                type: 'POST',
+                data: jsonStr,            
+                contentType: "application/json;charset=utf-8",
+                headers:{
+                    'Access-Control-Allow-Origin':'*'
+                },       		
+                success: function( data, textStatus, jQxhr ){
+                        var partsArray =  data["resultMessage"]
+                        partsArray = partsArray.split(':')
+                        alert("success1: " + partsArray[0] + " success2: " + partsArray[1]);
+                        clearMenu();
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log("error:"+ errorThrown );
+                }
+            }); 
+        }
+        function submitMenu(){
+            var orderItems = sessionStorage.getItem("orderitems");
+            if(orderItems == null)
+            {
+                alert('Please make selections from the menu');
+                return;
+            }
+            var PIN  = $('#PIN').val();
+            if(PIN == '')
+            {
+                alert('Please enter a PIN');
+                return;
+            }
+            var TableName  = $('#tablename').val();
+            if(TableName == '')
+            {
+                alert('Please enter a TableName');
+                return;
+            }
+            var TableNumber  = $('#tablenumber').val();
+            if(TableNumber == '')
+            {
+                alert('Please enter a TableNumber');
+                return;
+            }
+            var Guests  = $('#guestcount').val();
+            if(Guests == '')
+            {
+                alert('Please enter a Guests');
+                return;
+            }
+
+            sendJSONLogin();  
+     
+        }
+        function buildOrderItemsJSON(item, price, qty)
+        {
+            var cart = {
+                ItemDescription: item,
+                ItemPrice: price,
+                ItemQty: qty
+            };
+            if(sessionStorage.getItem("orderitems") != null 
+                        && sessionStorage.getItem("orderitems").length > 0)
+            { 
+                var x = JSON.parse(sessionStorage.getItem("orderitems"))
+                var isFound = 0;
+                for (var i = 0; i < x.length; i++) {
+                    if(x[i].ItemDescription==item)
+                    {                
+                        x[i].ItemQty = qty;
+                        isFound = 1;
+                        break;
+                    }
+                }
+
+                if(isFound == 0)
+                {
+                    x.push(cart);
+                    isFound = 0;
+
+                }
+                var jsonStr = JSON.stringify(x);
+                sessionStorage.setItem("orderitems", jsonStr);
+                alert("JSON top: " + jsonStr);
+            }
+            else
+            {
+                var orderitems = [];
+                orderitems.push(cart)
+                var jsonStr = JSON.stringify(orderitems);
+                sessionStorage.setItem("orderitems", jsonStr);
+                alert("JSON bottom: " + jsonStr);
+            }
+        }
+        function viewMenu(){
+            var orderItems = JSON.parse(sessionStorage.getItem("orderitems"));
+
+            $("#grid").kendoGrid({
+                    dataSource: {
+                        data: orderItems,
+                        schema: {
+                            model: {
+                                fields: {
+                                    ItemDescription: { type: "string" },
+                                    ItemPrice: { type: "string" },
+                                    ItemQty: { type: "string" }
+                                }
+                            }
+                        },
+                        pageSize: 20
+                    },
+                    height: 500,
+                    scrollable: true,
+                    sortable: true,
+                    filterable: true,
+                    pageable: {
+                        input: true,
+                        numeric: false
+                    },
+                    columns: [
+                        { field: "ItemDescription", title: "ItemDescription",  width: "50px" },
+                        { field: "ItemPrice", title: "ItemPrice", width: "50px" },
+                        { field: "ItemQty", title: "ItemQty", width: "50px" }
+                    ]
+            });
+        }
+        function clearMenu(){
+            sessionStorage.clear(); 
+            alert('Menu Cleared!'); 
+            $("#totalslist").empty();  
+            $("#todolist").empty();
+            $("#PIN").val('');
+            $("#tablename").val('');
+            $("#tablenumber").val('');
+            $("#guestcount").val('');
+        }   
+    </script>
+</head>
+<body>
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-3 sidenav">
+        <div>
+            <a class="navbar-brand js-scroll-trigger" href="http://127.0.0.1:5500/index.html"><h3>RESTAURANT MENU</h3></a>
+            <br><br><br><br>
+        </div>
+        <ul class="nav nav-pills nav-stacked ">
+            <div class="form-group">
+                <label for="PIN">Enter PIN:</label>
+                <input type="text" name="PIN" class="form-control input-sm" id="PIN" maxlength="10" style="color: blue; background-color: lightyellow; ">
+            </div>
+            <div class="form-group">
+                <label for="tablename">Table Name:</label>
+                <input type="text" name="tablename" class="form-control input-sm" id="tablename" maxlength="10" style="color: blue; background-color: lightyellow; ">
+            </div>
+            <div class="form-group">
+                <label for="tablenumber">Table Number:</label>
+                <input type="text" name="tablenumber" class="form-control input-sm" id="tablenumber" maxlength="10" style="color: blue; background-color: lightyellow; ">
+            </div> 
+            <div class="form-group">
+                <label for="guestcount">Guest Count:</label>
+                <input type="text" name="guestcount" class="form-control input-sm" id="guestcount" maxlength="10" style="color: blue; background-color: lightyellow; ">
+            </div> 
+            <button id="btnSubmitmenu" type="button" class="btn btn-primary" onclick="submitMenu()">Submit Menu</button>
+            <button id="btnViewMenu" type="button" class="btn btn-primary"  data-toggle="modal" data-target="#exampleModalCenter" onclick="viewMenu()">View Menu</button>
+            <button id="btnClearMenu" type="button" class="btn btn-primary" onclick="clearMenu()">Clear Menu</button>
+            <button id="btnViewSubmissions" type="button" class="btn btn-primary" padding: 10px;  onclick="window.open('reports.html')">View Submissions</button>
+            <button id="btnPrintReceipt" type="button" class="btn btn-primary" onclick="printReceipt()">Print Receipt</button>
+        </ul><br><br><br>
+        <div class="list-group" id="todolist"></div>
+        <div id="totalslist" style="color: blue; background-color: lightyellow;"></div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div id="grid"></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+    </div>
+    <div class="align-self-center  col-sm-9">
+      <div class="align-middle" id="section1">
+      <div>     
+    </div>
+    <div class="row" ></div>
+    <div class="row">
+        <div id="sectionBeer" class="align-self-center col-sm-3 ">
+            <div><img src="/images/beer.png" class="img-responsive" style="width:40%" alt="Image"/></div>
+            <div id="beer_label">Cold Beer  $4.99</div>
+            <div>
+                <label for="qtyBeer">Qty:</label>
+                <input type="text" class="form-control" name="qtyBeer"  id="qtyBeer" maxlength="5" border="1" width:"5px;"/>
+            </div>
+            <div><button id="btnBeer" type="button" class="btn btn-primary" onclick="displayItem('#beer_label','beer',4.99, '#qtyBeer')">Add to Cart</button></div>
+        </div>
+        <div id="sectionApplePie" class="align-self-center col-sm-3 ">
+            <img src="/images/apple-pie.png" class="img-responsive" style="width:40%" alt="Image"/>
+            <div id="apple_pie_label">Apple Pie  $2.99</div>
+            <div>
+                <label for="qtyApplePie">Qty:</label>
+                <input type="text" class="form-control" name="qtyApplePie"  id="qtyApplePie" maxlength="5" border="1" width:"5px;"/>
+            </div>
+            <div><button id="btnApplePie" type="button" class="btn btn-primary" onclick="displayItem('#apple_pie_label','apple pie',2.99,'#qtyApplePie')">Add to Cart</button></div>
+        </div>
+        <br>
+        <div id="sectionCake" class="align-self-center col-sm-3 ">
+            <img src="/images/cake.png" class="img-responsive" style="width:40%" alt="Image"/>
+            <div id="cake_label">Chocolate Cake  $10.99</div>
+            <div>
+                <label for="qtyChocolateCake">Qty:</label>
+                <input type="text" class="form-control" name="qtyChocolateCake"  id="qtyChocolateCake" maxlength="5" border="1" width:"5px;"/>
+            </div>
+            <div><button id="btnCake" type="button" class="btn btn-primary" onclick="displayItem('#cake_label','cake',10.99,'#qtyChocolateCake')">Add to Cart</button></div>
+        </div>
+        <br>
+        <div id="sectionTea" class="align-self-center col-sm-3 ">          
+            <img src="/images/coffee-cup.png" class="img-responsive" style="width:35%" alt="Image"/>            
+            <div id="tea_label">Tea  $1.99</div>
+            <div>
+                <label for="qtyTea">Qty:</label>
+                <input type="text" class="form-control" name="qtyTea"  id="qtyTea" maxlength="5" border="1" width:"5px;"/>
+            </div>
+            <div><button id="btntea" type="button" class="btn btn-primary" onclick="displayItem('#tea_label','tea',1.99,'#qtyTea')">Add to Cart</button></div>
+        </div>
+    <div>
+    <div class="row" ></div>
+    <div class="row">
+        <div class="align-self-center col-sm-3 ">
+            <img src="/images/cutlery.png" class="img-responsive" style="width:40%" alt="Image"/>
+            <div id="steak_label">Steak Combo  $20.99</div>
+            <div>
+                <label for="qtySteak">Qty:</label>
+                <input type="text" class="form-control" name="qtySteak"  id="qtySteak" maxlength="5" border="1" width:"5px;"/>
+            </div>
+            <div><button id="btnsteak" type="button" class="btn btn-primary" onclick="displayItem('#steak_label','steak combo',20.99,'#qtySteak')">Add to Cart</button></div>
+        </div>
+        <div class="align-self-center col-sm-3 ">
+            <img src="/images/fish.png" class="img-responsive" style="width:40%" alt="Image"/>
+            <div id="fish_label">Fish Combo  $22.99</div>
+            <div>
+                <label for="qtyFish">Qty:</label>
+                <input type="text" class="form-control" name="qtyFish"  id="qtyFish" maxlength="5" border="1" width:"5px;"/>
+            </div>
+            <div><button id="btnfish" type="button" class="btn btn-primary" onclick="displayItem('#fish_label','fish combo',20.99,'#qtyFish')">Add to Cart</button></div>
+        </div>
+        <div class="align-self-center col-sm-3 ">
+            <img src="/images/hamburger.png" class="img-responsive" style="width:40%" alt="Image"/>
+            <div id="burger_label">Burger and fries  $9.99</div>
+            <div>
+                <label for="qtyBurger">Qty:</label>
+                <input type="text" class="form-control" name="qtyBurger"  id="qtyBurger" maxlength="5" border="1" width:"5px;"/>
+            </div>
+            <div><button id="btnfish" type="button" class="btn btn-primary" onclick="displayItem('#burger_label','burger and fries',9.99,'#qtyBurger')">Add to Cart</button></div>
+        </div>
+        <div class="align-self-center col-sm-3 ">
+            <img src="/images/meal-deal.png" class="img-responsive" style="width:40%" alt="Image"/>
+            <div id="a-la-carte_label">A-La-Carte Family Combo  $39.99</div>
+            <div>
+                <label for="qtyA-la-carte">Qty:</label>
+                <input type="text" class="form-control" name="qtyA-la-carte"  id="qtyA-la-carte" maxlength="5" border="1" width:"5px;"/>
+            </div>
+            <div><button id="btnfish" type="button" class="btn btn-primary" onclick="displayItem('#a-la-carte_label','a-la-carte combo',39.99,'#qtyA-la-carte')">Add to Cart</button></div>
+        </div>
+    </div>
+ <div class="row" ><br><br></div>
+    <div class="row">
+        <div class="align-self-center col-sm-3 ">
+            <img src="/images/piece-of-cake.png" class="img-responsive" style="width:40%" alt="Image"/>
+            <div id="lemon_pie_label">Lemon Pie $3.99</div>
+            <div>
+                <label for="qtylemon_pie">Qty:</label>
+                <input type="text" class="form-control" name="qtylemon_pie"  id="qtylemon_pie" maxlength="5" border="1" width:"5px;"/>
+            </div>
+            <div><button id="btnlemon_pie" type="button" class="btn btn-primary" onclick="displayItem('#lemon_pie_label','lemon pie',3.99,'#qtylemon_pie')">Add to Cart</button></div>
+        </div>
+        <div class="align-self-center col-sm-3 ">
+            <img src="/images/pizza-slice.png" class="img-responsive" style="width:40%" alt="Image"/><br>
+            <div id="pizza_label">Pizza $2.99</div>
+            <div>
+                <label for="qtyPizza">Qty:</label>
+                <input type="text" class="form-control" name="qtyPizza"  id="qtyPizza" maxlength="5" border="1" width:"5px;"/>
+            </div>
+            <div><button id="btnPizza" type="button" class="btn btn-primary" onclick="displayItem('#pizza_label','pizza slice',2.99,'#qtyPizza')">Add to Cart</button></div>
+        </div>
+        <div class="align-self-center col-sm-3 ">
+            <img src="/images/salad.png" class="img-responsive" style="width:40%" alt="Image"/>
+            <div id="salad_label">Ceasar Salad $4.99</div>
+            <div>
+                <label for="qtySalad">Qty:</label>
+                <input type="text" class="form-control" name="qtySalad"  id="qtySalad" maxlength="5" border="1" width:"5px;"/>
+            </div>        
+            <div><button id="btnSalad" type="button" class="btn btn-primary" onclick="displayItem('#salad_label','ceasar salad',4.99,'#qtySalad')">Add to Cart</button></div>
+        </div>
+        <div class="align-self-center col-sm-3 ">
+            <img src="/images/steak.png" class="img-responsive" style="width:40%" alt="Image"/>
+            <div id="mac_cheese_label">Mac and Cheese $5.99</div>
+            <div>
+                <label for="qtyMacCheese">Qty:</label>
+                <input type="text" class="form-control" name="qtyMacCheese"  id="qtyMacCheese" maxlength="5" border="1" width:"5px;"/>
+            </div> 
+            <div><button id="btnMacCheese" type="button" class="btn btn-primary" onclick="displayItem('#mac_cheese_label','mac and cheese',5.99,'#qtyMacCheese')">Add to Cart</button></div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<footer class="container-fluid">
+</footer>
+
+</body>
+</html>

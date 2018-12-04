@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>POS REPORTS</title>
+
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/1.2.0/json2html.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.json2html/1.2.0/jquery.json2html.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2018.3.1017/js/kendo.all.min.js"></script>
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.3.1017/styles/kendo.common.min.css" />
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.3.1017/styles/kendo.blueopal.min.css" />
+    <style>
+       .center_div{
+            margin-top: 60px;
+            height: 50%;
+            width:100% /* value of your choice which suits your alignment */
+        }
+        .container2 {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+
+        }
+    </style>
+    <script>
+    function getGridDetails()
+    {
+        ShowDiv();
+        getUserTicketGridDetails();
+        getMenuGridDetails();
+        getPaymentGridDetails();
+    }
+    function getUserTicketGridDetails()
+    {
+            var PIN = $('#PIN').val();
+            $("#user_grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: "http://localhost:8422/api/POS/GetPOSDetails/PIN="+PIN,
+                    dataType: "json"
+                },
+                pageSize: 20
+            },
+            height: 500,
+            groupable: true,
+            sortable: true,
+            resizable: true,
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+                buttonCount: 5
+            },
+                columns: [
+                {
+                    field: "pin",
+                    title: "PIN",
+                    width: 120
+                }, 
+                {
+                    field: "name",
+                    title: "Name",
+                    width: 120
+                }, 
+                {
+                    field: "ticketId",
+                    title: "TicketId",
+                    width: 120
+                }, 
+                {
+                    field: "tableName",
+                    title: "TableName",
+                    width: 120
+                }, 
+                {
+                    field: "tableNumber",
+                    title: "TableNumber",
+                    width: 120
+                }, 
+                {
+                    field: "departmentId",
+                    title: "DepartmentId",
+                    width: 120
+                }, 
+                {
+                    field: "guestCount",
+                    title: "GuestCount",
+                    width: 120
+                },                             
+                {
+                    field: "balance",
+                    title: "Balance",
+                    width: 120
+                }]
+        });
+    }
+    function getMenuGridDetails()
+    {
+            var PIN = $('#PIN').val();
+            $("#menu_grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: "http://localhost:8422/api/POS/GetPOSDetails/PIN="+PIN,
+                    dataType: "json"
+                },
+                pageSize: 20
+            },
+            height: 500,
+            groupable: true,
+            sortable: true,
+            resizable: true,
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+                buttonCount: 5
+            },
+                columns: [
+                {
+                    field: "itemDescription",
+                    title: "ItemDescription",
+                    width: 120
+                }, 
+                {
+                    field: "itemPrice",
+                    title: "ItemPrice",
+                    width: 120
+                }]
+        });
+    }
+    function getPaymentGridDetails()
+    {
+            var PIN = $('#PIN').val();
+            $("#payment_grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: "http://localhost:8422/api/POS/GetPOSDetails/PIN="+PIN,
+                    dataType: "json"
+                },
+                pageSize: 20
+            },
+            height: 500,
+            groupable: true,
+            sortable: true,
+                columns: [{
+                    field: "gatewayPaymentId",
+                    title: "Ticket Paid/Closed",
+                    width: 120
+                },  
+                {
+                    field: "authCode",
+                    title: "AuthCode",
+                    width: 120
+                },  
+                {
+                    field: "transactionCode",
+                    title: "TransactionCode",
+                    width: 120
+                },  
+                {
+                    field: "posTenderType",
+                    title: "PosTenderType",
+                    width: 120
+                },  
+                {
+                    field: "subTotal",
+                    title: "SubTotal",
+                    width: 120
+                },  
+                {
+                    field: "taxTotal",
+                    title: "TaxTotal",
+                    width: 120
+                },  
+                {
+                    field: "tipTotal",
+                    title: "TipTotal",
+                    width: 120
+                },  
+                {
+                    field: "paymentTotal",
+                    title: "PaymentTotal",
+                    width: 120
+                },  
+                {
+                    field: "creditCardId",
+                    title: "CreditCardId",
+                    width: 120
+                },  
+                {
+                    field: "paymentId",
+                    title: "PaymentId",
+                    width: 120
+                },   
+                {
+                    field: "cardType",
+                    title: "CardType",
+                    width: 120
+                },  
+                {
+                    field: "panHash",
+                    title: "PanHash",
+                    width: 120
+                },  
+                {
+                    field: "panLast4",
+                    title: "PanLast4",
+                    width: 120
+                },   
+                {
+                    field: "expYear",
+                    title: "ExpYear",
+                    width: 120
+                },
+                {
+                    field: "expMonth",
+                    title: "ExpMonth",
+                    width: 120
+                }]
+        });
+    }
+    function ShowDiv() 
+    {
+        var x = document.getElementById("UserGrid");
+        var y= document.getElementById("MenuGrid");
+        var z = document.getElementById("PaymentGrid");
+  
+            x.style = "visibility: visible";
+            y.style = "visibility: visible";
+            z.style = "visibility: visible";
+        
+    }
+    </script>
+</head>
+
+<body>
+    <div class="col-sm-2 sidenav">
+        <a class="navbar-brand js-scroll-trigger" href="http://127.0.0.1:5500/index.html"><h3>POS REPORTS</h3></a>
+    </div>
+    <div class="align-self-center  col-sm-10">
+        <div class="container">
+            <div class="form-group">
+                <label for="PIN">Enter PIN:</label>
+                <input type="text" class="form-control" id="PIN" name="PIN" style="color: blue; background-color: lightyellow">
+                <button id="btnView" type="button" class="btn btn-primary" onclick="getGridDetails()">Submit</button>
+            </div>
+            <div>
+                <br><br>
+            </div>
+            <div id="UserGrid" style="visibility: hidden">
+                <div><h3>Server/Ticket:</h3></div>
+                <div id="user_grid"></div>
+            </div>
+            <div>
+                <br><br>
+            </div>
+            <div id="MenuGrid" style="visibility: hidden">
+                <div><h3>Ordered Items:</h3></div>
+                <div id="menu_grid"></div>
+            </div>
+            <div>
+                <br><br>
+            </div>
+            <div id="PaymentGrid" style="visibility: hidden">
+                <div><h3>Payment Information:</h3></div>
+                <div id="payment_grid"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<footer>
+   <div></div>
+</footer>
+
+</html>

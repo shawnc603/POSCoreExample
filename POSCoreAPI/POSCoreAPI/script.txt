@@ -1,0 +1,362 @@
+﻿
+
+/****DB SCRIPT *******?
+
+CREATE DATABASE [POSDB];
+GO
+
+USE [POSDB];
+GO
+
+
+CREATE TABLE [Users] (
+    [UserId] int NOT NULL IDENTITY,
+	[PIN] int NOT NULL,
+    [Name] nvarchar(100) NOT NULL
+    CONSTRAINT [PK_Users] PRIMARY KEY ([UserId])
+);
+GO
+
+CREATE TABLE [Tickets] (
+    [TicketId] int NOT NULL IDENTITY,
+    [UserId] int NOT NULL,
+    [TableName] nvarchar(200),
+    [TableNumber] int NULL,
+	[DepartmentID] int NULL,
+	[GuestCount] int NULL,
+	[Balance] decimal(5,2),	
+	[TicketAlerts] nvarchar(100),
+	[Flags] nvarchar(20),
+	[Options] nvarchar(20),
+	[CreatedTime] DateTime,
+    CONSTRAINT [PK_Tickets] PRIMARY KEY ([TicketId]),
+    CONSTRAINT [FK_Tickets_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([UserId]) ON DELETE CASCADE
+);
+GO
+
+CREATE TABLE [Order] (
+    [OrderId] int NOT NULL IDENTITY,
+	[TicketId] int NOT NULL,
+    [ItemDescription] nvarchar(50),
+	[ItemPrice] decimal(5,2),
+	CONSTRAINT [PK_Order] PRIMARY KEY ([OrderId]),
+	CONSTRAINT [FK_Order_Tickets_TicketId] FOREIGN KEY ([TicketId]) REFERENCES [Tickets] ([TicketId]) ON DELETE CASCADE
+);
+GO
+
+CREATE TABLE [Payments] (
+    [PaymentId] int NOT NULL IDENTITY,
+    [TicketId] int NOT NULL,
+    [GatewayPaymentID] int NOT NULL,
+	[AuthCode] nvarchar(100),
+	[TransactionCode] nvarchar(100),
+	[POSTenderType] nvarchar(20),
+	[Subtotal] decimal(5,2),	
+	[TaxTotal] decimal(5,2),
+	[TipTotal] decimal(5,2),
+    [PaymentTotal] decimal(5,2),
+	[CreatedTime] DateTime,
+    CONSTRAINT [PK_Payments] PRIMARY KEY ([PaymentId]),
+    CONSTRAINT [FK_Payments_Tickets_TicketId] FOREIGN KEY ([TicketId]) REFERENCES [Tickets] ([TicketId]) ON DELETE CASCADE
+);
+GO
+
+CREATE TABLE [CreditCard] (
+    [CreditCardId] int NOT NULL IDENTITY,
+	[PaymentId] int NOT NULL,
+    [CardType] nvarchar(25),
+	[PanHash] nvarchar(max),
+	[PANLast4] nvarchar(4),
+	[ExpYear] nvarchar(4),
+	[ExpMonth] nvarchar(2),
+	CONSTRAINT [PK_CreditCard] PRIMARY KEY ([CreditCardId]),
+	CONSTRAINT [FK_CreditCard_Payment_PaymentId] FOREIGN KEY ([PaymentId]) REFERENCES [Payments] ([PaymentId]) ON DELETE CASCADE
+);
+GO
+
+
+
+/****JSON SCRIPTS *******/
+
+
+
+REQUEST GETPOSSTATUS: http://localhost:8422/api/pos/GetPOSStatus 
+
+REQUEST LOGINDATA: http://localhost:8422/api/pos/GetLoginData
+{"Data":"1234","ID":1,"Method":0}
+
+REQUEST GETTICKETS: http://localhost:8422/api/pos/GetTickets/filter=0
+{"ID":1,"Name":"TESTUSER1","PIN":"1234","Permissions":0}
+
+REQUEST GETTICKETSBYNAME: http://localhost:8422/api/pos/GetTicketByName/name=tbl1
+{"ID":1,"Name":"TESTUSER1","PIN":"1234","Permissions":0}
+
+REQUEST GETTICKETSBYID: http://localhost:8422/api/pos/GetTicketById/filter=0&Id=1
+{"ID":1,"Name":"TESTUSER1","PIN":"1234","Permissions":0}
+
+REQUEST APPLYPAYMENT: http://localhost:8422/api/pos/PostApplyPayment
+{
+	"User":{
+		"ID":1,
+		"Name":"TESTUSER1",
+		"PIN":"1234",
+		"Permissions":0
+	},
+	"Ticket":{
+		"Balance":50.00,
+		"CreatedTime":"2015-06-12T12:28:50.2500000-07:00",
+		"Flags":0,
+		"GuestCount":1,
+		"ID":5,
+		"Name":"tblUSER5",
+		"Number":"107508",
+		"Owner":{
+			"ID":1,
+			"Name":"tblUSER5",
+			"PIN":"1234",
+			"Permissions":0
+		},
+		"PaymentsTotal":50,
+		"TicketAlerts":4,
+		"User":{
+			"ID":1,
+			"Name":"tblUSER5",
+			"PIN":"1234",
+			"Permissions":0
+		}
+	},
+	"POSTenderType":"AMEX_R",
+	"Amount":50.00,
+	"Tip":2.00,
+	"TransactionCode":"null-17848fdbcf",
+	"PrintingInfo":{
+		"Name":"Epson",
+		"ID":"1",
+		"SplitType":0,
+		"IsFinal":1
+	},
+	"CardData":{
+		"CardType":"AMEX",
+		"ClearText":"C135",
+		"CreditType":"CREDIT",
+		"DeviceSerialNumber":"B048D36110811AA",
+		"DUKPTSerialNumber":"9011880B048D360002B7",
+		"EncryptedCRC":"",
+		"EncryptedMagnePrint":"F8B413422BF212CFF4C623FBAC5DE2C35F5B1DCB77E0BD733F2F01EA797ED6048F2FBEEDEF307350EB1D945D19A60549780DA9CAAE6174B0",
+		"EncryptedSessionID":"15F72A0069DE16A3",
+		"EncryptedTrack1":"001af001",
+		"EncryptedTrack2":"674842EEBB874F72A5A19CE3330816770701C5F80112C25025BB96CD8BCE43655EA31D2E8961D6C0",
+		"EncryptedTrack3":"",
+		"ExpMonth":"01",
+		"ExpYear":"19",
+		"FormatCode":"0000",
+		"IsTestCard":false,
+		"MagnePrint":"61400200",
+		"MaskedTrack1":"%371449635398431^SMITH3/JOE^1901012000000001230000?",
+		"MaskedTrack2":";371400070008431=19010000000000000000?",
+		"MaskedTrack3":null,
+		"Name":"SMITH3/JOE",
+		"PanHash":"371400070008431",
+		"PANLast4":"8431",
+		"POSTenderType":"AMEX_R",
+		"ReaderEncryptedStatus":"0600"
+	},
+	"AuthCode":"null-04cbeffd63"
+}
+
+REQUEST SETTLETICKET: http://localhost:8422/api/pos/PostSettleTicket
+{
+    "userAccount": {
+    "ID": 0,
+    "PIN": null,
+    "Name": null,
+    "Permissions": 0
+    },
+    "ticket": {
+    "ID": 0,
+    "Name": null,
+    "Number": null,
+    "TableID": 0,
+    "DepartmentID": 0,
+    "GuestCount": 0,
+    "Balance": 0,
+    "PaymentsTotal": 0,
+    "CreatedTime": "/Date(-62135575200000)/",
+    "Owner": null,
+    "User": null,
+    "Flags": 0,
+    "Alerts": 0
+    }
+} 
+
+REQUEST PRINTRECEIPT: http://localhost:8422/api/pos/PostPrintReceipt  
+{
+        "PrinterID":1,
+        "Header":"12220 113th Ave. Suite 210, Kirkland, WA 98037",
+        "Footer":"Printed from the RAIL",
+        "Payment":{
+            "type":"card",
+            "POSTenderType":"AMEX_R",
+            "TransactionCode":"A11A8C251980",
+            "AuthCode":"8aa46349ba",
+            "CardData":{
+                "CardType":"AMEX",
+                "ClearText":"C135",
+                "CreditType":"CREDIT",
+                "DUKPTSerialNumber":"9011880B048D360002B7",
+                "DeviceSerialNumber":"B048D36110811AA",
+                "EncryptedCRC":"",
+                "EncryptedMagnePrint":"F8B413422BF212CFF4C623FBAC5DE2C35F5B1DCB77E0BD733F2F01EA797ED6048F2FBEEDEF307350EB1D945D19A60549780DA9CAAE6174B0",
+                "EncryptedSessionID":"15F72A0069DE16A3",
+                "EncryptedTrack1":"001af001",
+                "EncryptedTrack2":"674842EEBB874F72A5A19CE3330816770701C5F80112C25025BB96CD8BCE43655EA31D2E8961D6C0",
+                "EncryptedTrack3":"",
+                "ExpMonth":"01",
+                "ExpYear":"19",
+                "FormatCode":"0000",
+                "MagnePrint":"61400200",
+                "MaskedTrack1":"%371449635398431^SMITH3/JOE^1901012000000001230000?",
+                "MaskedTrack2":";371400070008431=19010000000000000000?",
+                "MaskedTrack3":null,
+                "Name":"SMITH3/JOE",
+                "PANLast4":"8431",
+                "POSTenderType":"AMEX_R",
+                "PanHash":"371400070008431",
+                "ReaderEncryptedStatus":"0600"
+            }
+        },
+        "Bill":{
+            "DiscountTotal":0,
+            "GratuityTotal":0,
+            "ServiceChargeTotal":0,
+            "Subtotal":70.25,
+            "TaxTotal":6.46,
+            "TipTotal":1.47,
+            "Total":78.71
+        },
+        "Order":{
+            "Items":[
+                {
+                "Description":"Root Beer",
+                "ID":1147161,
+                "Modifiers":[
+                ],
+                "Price":2.75
+                },
+                {
+                "Description":"Thai Chick Strip",
+                "ID":1147170,
+                "Modifiers":[
+                ],
+                "Price":9.5
+                }
+            ],
+            "Tip":1.50
+        },
+        "Format":0,
+        "Ticket":{
+            "Balance":12.25,
+            "CreatedTime":"2016-02-08T13:11:24.0000000",
+            "DepartmentID":0,
+            "Flags":0,
+            "GuestCount":0,
+            "ID":1049519,
+            "Name":"Table 56\/1",
+            "Number":"10943",
+            "Owner":{
+                "ID":1234,
+                "Name":"To Go Order",
+                "PIN":null,
+                "Permissions":0
+            },
+            "PaymentsTotal":0.0,
+            "TableID":0,
+            "TicketAlerts":0,
+            "User":{
+                "ID":1234,
+                "Name":"To Go Order",
+                "PIN":"1234",
+                "Permissions":0
+            }
+        },
+        "Options":0
+}
+
+
+
+
+REQUEST CREATEPOSUSERS: http://localhost:8422/api/pos/CreatePOSUsers
+{
+	"Name":"TESTUSER5",
+	"PIN":"5678"
+}
+
+
+REQUEST CREATEPOSTICKETS: http://localhost:8422/api/pos/CreatePOSTickets/userid=1
+{
+  "tableName": "tbl4",
+  "tableNumber": 4,
+  "departmentId": 6546,
+  "guestCount": 2,
+  "balance": 20.00,
+  "ticketAlerts": "none",
+  "flags": "none",
+  "options":"none"
+}
+
+
+REQUEST CREATEPOSORDER: http://localhost:8422/api/pos/CreatePOSOrders/ticketId=1&orderid=1
+[
+  {
+	  "ItemDescription": "lobster",
+	  "ItemPrice": 30.00
+  },
+  {
+	  "ItemDescription": "lobster2",
+	  "ItemPrice": 40.00
+  }
+]
+
+
+REQUEST CREATEPOSPAYMENTS:http://localhost:8422/api/pos/CreatePOSPayments/ticketId=1
+{
+  "gatewayPaymentId": 1,
+  "authCode": "test",
+  "transactionCode": "test",
+  "postenderType": "credit card",
+  "subtotal": 10.00,
+  "taxTotal": 2.00,
+  "tipTotal": 2.00,
+  "paymentTotal": 14.00
+}
+
+REQUEST CREATEPOSCREDITCARDS: http://localhost:8422/api/pos/CreatePOSCreditCards/paymentId=1
+{
+  "cardType": "VISA",
+  "panHash": "371400070008431",
+  "panLast4": "8431",
+  "expYear": "19",
+  "expMonth": "01"
+}
+
+
+
+select * from users 
+select * from tickets
+select * from [order]
+select * from payments
+select * from creditcard
+
+update users set PIN = 2001, Name = 'TESTDEMOUSER111' where userid = 11
+
+select * from users u
+left join tickets t on u.userid= t.userid 
+left join [order] o on t.ticketid = o.ticketid 
+left join payments p on t.ticketid = p.ticketid
+left join creditcard c on p.paymentid= c.paymentid
+where u.userid = 11
+
+
+select * from users u
+inner join tickets t on u.userid= t.userid
+where u.PIN=1234

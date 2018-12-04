@@ -1,0 +1,209 @@
+REQUEST LOGINDATA:{"Data":"1234","ID":1234,"Method":0}
+ 
+RESPONSE LOGINDATA:{"id":1234,"pin":"1234","name":"BBB Doe","permissions":1}
+ 
+REQUEST GETTICKETS:{"ID":1234,"Name":"EMS","PIN":"1234","Permissions":0}
+ 
+RESPONSE GETTICKETS:[{"id":1234,"name":"test order 1","number":"1234","tableID":1,"departmentID":897,"guestCount":1,"balance":10.0,"paymentsTotal":100.0,"createdTime":"2018-09-10T10:42:55.684888-05:00","owner":{"id":1234,"pin":"1234","name":"BBB Doe","permissions":1},"user":{"id":1234,"pin":"1234","name":"BBB Doe","permissions":1},"flags":512,"alerts":0},{"id":8543,"name":"test order 2","number":"8543","tableID":1,"departmentID":897,"guestCount":1,"balance":20.0,"paymentsTotal":100.0,"createdTime":"2018-09-10T10:42:55.6864667-05:00","owner":{"id":1234,"pin":"1234","name":"BBB Doe","permissions":1},"user":{"id":1234,"pin":"1234","name":"BBB Doe","permissions":1},"flags":512,"alerts":0},{"id":9874,"name":"test order 3","number":"9874","tableID":1,"departmentID":897,"guestCount":1,"balance":100.0,"paymentsTotal":100.0,"createdTime":"2018-09-10T10:42:55.686471-05:00","owner":{"id":1234,"pin":"1234","name":"BBB Doe","permissions":1},"user":{"id":1234,"pin":"1234","name":"BBB Doe","permissions":1},"flags":512,"alerts":0}]
+ 
+REQUEST GETTICKETSBYNAME:{ "ID":1234,"Name":"test order 1","PIN":"1234","Permissions":0}
+ 
+RESPONSE GETTICKETSBYNAME:{"id":1234,"name":"test order 1","number":"1234","tableID":1,"departmentID":897,"guestCount":1,"balance":10.0,"paymentsTotal":100.0,"createdTime":"2018-09-10T10:42:55.730155-05:00","owner":{"id":1234,"pin":"1234","name":"BBB Doe","permissions":1},"user":{"id":1234,"pin":"1234","name":"BBB Doe","permissions":1},"flags":512,"alerts":0}
+ 
+REQUEST GETTICKETSBYID:{"ID":1234,"Name":"test order 1","PIN":"1234","Permissions":0}
+ 
+RESPONSE GETTICKETSBYID:{"id":9874,"name":"test order 3","number":"9874","tableID":1,"departmentID":897,"guestCount":1,"balance":100.0,"paymentsTotal":100.0,"createdTime":"2018-09-10T10:42:55.7572201-05:00","owner":{"id":1234,"pin":"1234","name":"BBB Doe","permissions":1},"user":{"id":1234,"pin":"1234","name":"BBB Doe","permissions":1},"flags":512,"alerts":0}
+ 
+REQUEST APPLYPAYMENT:{
+                                    "User":{
+                                        "ID":194,
+                                        "Name":"Douglas Fir",
+                                        "PIN":"7777",
+                                        "Permissions":1
+                                    },
+                                    "Ticket":{
+                                        "Balance":73.44,
+                                        "CreatedTime":"2015-06-12T12:28:50.2500000-07:00",
+                                        "Flags":0,
+                                        "GuestCount":1,
+                                        "ID":107508,
+                                        "Name":"Table 77",
+                                        "Number":"107508",
+                                        "Owner":{
+                                            "ID":194,
+                                            "Name":"John",
+                                            "PIN":"Doe",
+                                            "Permissions":0
+                                        },
+                                        "PaymentsTotal":10,
+                                        "TicketAlerts":4,
+                                        "User":{
+                                            "ID":194,
+                                            "Name":"Douglas Fir",
+                                            "PIN":"7777",
+                                            "Permissions":1
+                                        }
+                                    },
+                                    "POSTenderType":"AMEX_R",
+                                    "Amount":14.23,
+                                    "Tip":1.92,
+                                    "TransactionCode":"null-17848fdbcf",
+                                    "PrintingInfo":{
+                                        "Name":"Epson",
+                                        "ID":"1",
+                                        "SplitType":0,
+                                        "IsFinal":1
+                                    },
+                                    "CardData":{
+                                        "CardType":"AMEX",
+                                        "ClearText":"C135",
+                                        "CreditType":"CREDIT",
+                                        "DeviceSerialNumber":"B048D36110811AA",
+                                        "DUKPTSerialNumber":"9011880B048D360002B7",
+                                        "EncryptedCRC":"",
+                                        "EncryptedMagnePrint":"F8B413422BF212CFF4C623FBAC5DE2C35F5B1DCB77E0BD733F2F01EA797ED6048F2FBEEDEF307350EB1D945D19A60549780DA9CAAE6174B0",
+                                        "EncryptedSessionID":"15F72A0069DE16A3",
+                                        "EncryptedTrack1":"001af001",
+                                        "EncryptedTrack2":"674842EEBB874F72A5A19CE3330816770701C5F80112C25025BB96CD8BCE43655EA31D2E8961D6C0",
+                                        "EncryptedTrack3":"",
+                                        "ExpMonth":"01",
+                                        "ExpYear":"19",
+                                        "FormatCode":"0000",
+                                        "IsTestCard":false,
+                                        "MagnePrint":"61400200",
+                                        "MaskedTrack1":"%371449635398431^SMITH3/JOE^1901012000000001230000?",
+                                        "MaskedTrack2":";371400070008431=19010000000000000000?",
+                                        "MaskedTrack3":null,
+                                        "Name":"SMITH3/JOE",
+                                        "PanHash":"371400070008431",
+                                        "PANLast4":"8431",
+                                        "POSTenderType":"AMEX_R",
+                                        "ReaderEncryptedStatus":"0600"
+                                    },
+                                    "AuthCode":"null-04cbeffd63"
+                                }
+ 
+RESPONSE APPLYPAYMENT:"{\"result\":{\"data\":Success},\"status\":200,\"type\":\"response\"}"
+ 
+REQUEST PRINTRECEIPT:{
+                                    "PrinterID":1,
+                                    "Header":"12220 113th Ave. Suite 210, Kirkland, WA 98037",
+                                    "Footer":"Printed from the RAIL",
+                                    "Payment":{
+                                        "type":"card",
+                                        "POSTenderType":"AMEX_R",
+                                        "TransactionCode":"A11A8C251980",
+                                        "AuthCode":"8aa46349ba",
+                                        "CardData":{
+                                            "CardType":"AMEX",
+                                            "ClearText":"C135",
+                                            "CreditType":"CREDIT",
+                                            "DUKPTSerialNumber":"9011880B048D360002B7",
+                                            "DeviceSerialNumber":"B048D36110811AA",
+                                            "EncryptedCRC":"",
+                                            "EncryptedMagnePrint":"F8B413422BF212CFF4C623FBAC5DE2C35F5B1DCB77E0BD733F2F01EA797ED6048F2FBEEDEF307350EB1D945D19A60549780DA9CAAE6174B0",
+                                            "EncryptedSessionID":"15F72A0069DE16A3",
+                                            "EncryptedTrack1":"001af001",
+                                            "EncryptedTrack2":"674842EEBB874F72A5A19CE3330816770701C5F80112C25025BB96CD8BCE43655EA31D2E8961D6C0",
+                                            "EncryptedTrack3":"",
+                                            "ExpMonth":"01",
+                                            "ExpYear":"19",
+                                            "FormatCode":"0000",
+                                            "MagnePrint":"61400200",
+                                            "MaskedTrack1":"%371449635398431^SMITH3/JOE^1901012000000001230000?",
+                                            "MaskedTrack2":";371400070008431=19010000000000000000?",
+                                            "MaskedTrack3":null,
+                                            "Name":"SMITH3/JOE",
+                                            "PANLast4":"8431",
+                                            "POSTenderType":"AMEX_R",
+                                            "PanHash":"371400070008431",
+                                            "ReaderEncryptedStatus":"0600"
+                                        }
+                                    },
+                                    "Bill":{
+                                        "DiscountTotal":0,
+                                        "GratuityTotal":0,
+                                        "ServiceChargeTotal":0,
+                                        "Subtotal":70.25,
+                                        "TaxTotal":6.46,
+                                        "TipTotal":1.47,
+                                        "Total":78.71
+                                    },
+                                    "Order":{
+                                        "Items":[
+                                            {
+                                            "Description":"Root Beer",
+                                            "ID":1147161,
+                                            "Modifiers":[
+                                            ],
+                                            "Price":2.75
+                                            },
+                                            {
+                                            "Description":"Thai Chick Strip",
+                                            "ID":1147170,
+                                            "Modifiers":[
+                                            ],
+                                            "Price":9.5
+                                            }
+                                        ],
+                                        "Tip":1.50
+                                    },
+                                    "Format":0,
+                                    "Ticket":{
+                                        "Balance":12.25,
+                                        "CreatedTime":"2016-02-08T13:11:24.0000000",
+                                        "DepartmentID":0,
+                                        "Flags":0,
+                                        "GuestCount":0,
+                                        "ID":1049519,
+                                        "Name":"Table 56\/1",
+                                        "Number":"10943",
+                                        "Owner":{
+                                            "ID":1234,
+                                            "Name":"To Go Order",
+                                            "PIN":null,
+                                            "Permissions":0
+                                        },
+                                        "PaymentsTotal":0.0,
+                                        "TableID":0,
+                                        "TicketAlerts":0,
+                                        "User":{
+                                            "ID":1234,
+                                            "Name":"To Go Order",
+                                            "PIN":"1234",
+                                            "Permissions":0
+                                        }
+                                    },
+                                    "Options":0
+                                }
+ 
+RESPONSE PRINTRECEIPT:"{\"result\":{\"data\":Success},\"status\":200,\"type\":\"response\"}"
+ 
+REQUEST SETTLETICKET:{
+                                      "userAccount": {
+                                        "ID": 0,
+                                        "PIN": null,
+                                        "Name": null,
+                                        "Permissions": 0
+                                      },
+                                      "ticket": {
+                                        "ID": 0,
+                                        "Name": null,
+                                        "Number": null,
+                                        "TableID": 0,
+                                        "DepartmentID": 0,
+                                        "GuestCount": 0,
+                                        "Balance": 0,
+                                        "PaymentsTotal": 0,
+                                        "CreatedTime": "/Date(-62135575200000)/",
+                                        "Owner": null,
+                                        "User": null,
+                                        "Flags": 0,
+                                        "Alerts": 0
+                                      }
+                                    }
+ 
+RESPONSE SETTLETICKET:"{\"result\":{\"data\":Success},\"status\":200,\"type\":\"response\"}"
+ 
+RESPONSE GETPOSSTATUS:{"status":"Online","kind":"Simphony","version":"1.0"}
+ 

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2011
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "POSCoreAPI", "POSCoreAPI\POSCoreAPI.csproj", "{2F884289-8893-4A51-92D9-9DC4C2053EDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POSCoreBAL", "POSCoreBAL\POSCoreBAL.csproj", "{ED4813CC-B3EC-4239-84F3-9CD3BB55923F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2F884289-8893-4A51-92D9-9DC4C2053EDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F884289-8893-4A51-92D9-9DC4C2053EDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F884289-8893-4A51-92D9-9DC4C2053EDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F884289-8893-4A51-92D9-9DC4C2053EDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED4813CC-B3EC-4239-84F3-9CD3BB55923F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED4813CC-B3EC-4239-84F3-9CD3BB55923F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED4813CC-B3EC-4239-84F3-9CD3BB55923F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED4813CC-B3EC-4239-84F3-9CD3BB55923F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D993694F-E2BC-42F6-89AD-08EF174ECA4D}
+	EndGlobalSection
+EndGlobal

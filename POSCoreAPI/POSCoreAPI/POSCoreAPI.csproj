@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\**" />
+    <Compile Remove="POSModelsEF\**" />
+    <Compile Remove="POSModels\**" />
+    <Content Remove="Data\**" />
+    <Content Remove="POSModelsEF\**" />
+    <Content Remove="POSModels\**" />
+    <EmbeddedResource Remove="Data\**" />
+    <EmbeddedResource Remove="POSModelsEF\**" />
+    <EmbeddedResource Remove="POSModels\**" />
+    <None Remove="Data\**" />
+    <None Remove="POSModelsEF\**" />
+    <None Remove="POSModels\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.2" />
+    <PackageReference Include="NSwag.AspNetCore" Version="11.19.0" />
+    <PackageReference Include="System.ServiceModel.Web" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\POSCoreBAL\POSCoreBAL.csproj" />
+  </ItemGroup>
+
+</Project>

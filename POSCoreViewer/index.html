@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>POS RESTAURANT</title>
+
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/1.2.0/json2html.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.json2html/1.2.0/jquery.json2html.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2018.3.1017/js/kendo.all.min.js"></script>
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.3.1017/styles/kendo.common.min.css" />
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.3.1017/styles/kendo.blueopal.min.css" />
+    <style>
+html,body{
+  width:100%;
+  height:100%;
+  margin:0
+}
+div.container{
+  position:relative;
+  width:100%;
+  height:100%;
+  box-sizing:border-box;
+  
+}
+.left, .right{
+    width:50%;
+    height:inherit;
+    float:left
+}
+a{
+  display:block;
+  width:100%;
+  height:inherit
+}
+.left{
+  background:url(images/restaurant1.jpg);
+  background-size:cover;
+}
+.right{
+  background:url(images/restaurant2.jpg);
+  background-size:cover;
+}
+.btn1 {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    background-color: 	#0000FF;
+    color: white;
+    font-size: 50px;
+    padding: 12px 24px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+}
+.btn2 {
+    position: absolute;
+    top: 50%;
+    left: 75%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    background-color: 	#0000FF;
+    color: white;
+    font-size: 50px;
+    padding: 12px 24px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+}
+    </style>
+</head>
+
+<body>
+    <div class="container">
+    <div align="center" > 
+        <h1>POS RESTAURANT SYSTEM</h1>
+    </div>
+        <div class="left">
+            <a href="http://127.0.0.1:5500/admin.html" ></a>
+            <button class="btn1" onclick="window.location.href='admin.html'">Admin</button>
+        </div>
+        <div class="right">
+            <a href="http://127.0.0.1:5500/submit_menu.html"></a>
+            <button class="btn2" onclick="window.location.href='menu.html'">Menu</button>
+        </div>
+    </div>
+</body>
+
+<footer>
+   <div></div>
+</footer>
+
+</html>
